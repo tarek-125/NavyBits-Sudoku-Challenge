@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 interface CellProps {
   value: string;
   isSelected: boolean;

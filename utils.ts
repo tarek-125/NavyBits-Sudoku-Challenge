@@ -1,19 +1,33 @@
 export const isValidSudoku = (board: string[][]): boolean => {
-    // تحقق من صحة الحل (مثال بسيط)
+    // تحقق بسيط من صحة اللعبة
+    const isValidRow = (row: string[]) =>
+      row.filter((val) => val !== '').length === new Set(row).size;
+  
+    const isValidColumn = (colIndex: number) => {
+      const column = board.map((row) => row[colIndex]);
+      return isValidRow(column);
+    };
+  
+    const isValidSubGrid = (rowStart: number, colStart: number) => {
+      const values: string[] = [];
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          values.push(board[rowStart + i][colStart + j]);
+        }
+      }
+      return isValidRow(values);
+    };
+  
     for (let i = 0; i < 9; i++) {
-      const row = new Set<string>();
-      const col = new Set<string>();
+      if (!isValidRow(board[i]) || !isValidColumn(i)) return false;
+    }
   
-      for (let j = 0; j < 9; j++) {
-        // التحقق من الصفوف
-        if (board[i][j] && row.has(board[i][j])) return false;
-        if (board[i][j]) row.add(board[i][j]);
-  
-        // التحقق من الأعمدة
-        if (board[j][i] && col.has(board[j][i])) return false;
-        if (board[j][i]) col.add(board[j][i]);
+    for (let i = 0; i < 9; i += 3) {
+      for (let j = 0; j < 9; j += 3) {
+        if (!isValidSubGrid(i, j)) return false;
       }
     }
+  
     return true;
   };
   

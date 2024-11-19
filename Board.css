@@ -23,48 +23,68 @@
     font-size: 18px;
     font-weight: bold;
     border-radius: 4px;
-    cursor: pointer;
     user-select: none;
+    cursor: pointer;
   }
   
   .number:hover {
-    background-color: #ddd;
+    background-color: #e0e0e0;
   }
   
   .board {
     display: grid;
     grid-template-rows: repeat(9, 40px);
     grid-template-columns: repeat(9, 40px);
+    margin-top: 10px;
   }
   
   .cell {
     width: 40px;
     height: 40px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid lightgray;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid lightgray;
-    font-size: 18px;
+    box-sizing: border-box;
     cursor: pointer;
   }
   
   .cell.selected {
-    background-color: lightblue;
-    border: 2px solid blue;
+    background-color: #d3f8d3;
   }
   
-  .submit-button {
+  .actions {
     margin-top: 15px;
+  }
+  
+  .submit-button,
+  .restart-button {
     padding: 10px 20px;
-    background-color: #4caf50;
-    color: white;
+    margin: 5px;
+    font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
   }
   
+  .submit-button {
+    background-color: #4caf50;
+    color: white;
+  }
+  
   .submit-button:hover {
     background-color: #45a049;
+  }
+  
+  .restart-button {
+    background-color: #ff5722;
+    color: white;
+  }
+  
+  .restart-button:hover {
+    background-color: #e64a19;
   }
   
     /* خطوط سوداء داكنة لتقسيم مربعات 3x3 */
