@@ -1,0 +1,14 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* يجعل الصفحة تأخذ ارتفاع الشاشة بالكامل */
+  background-color: #f9f9f9; /* لون خلفية مريح */
+}
+
+h1 {
+  font-size: 36px;
+  margin-bottom: 20px; /* مسافة بين العنوان واللوحة */
+  color: #333; /* لون العنوان */
+}

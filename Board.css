@@ -1,8 +1,40 @@
-.board {
+.board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .number-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .number {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    margin: 0 2px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer; /* تغيير المؤشر عند التفاعل مع الأرقام */
+  }
+  
+  .number:hover {
+    background-color: #ddd; /* تأثير عند التمرير فوق الرقم */
+  }
+  
+  .board {
     display: grid;
-    grid-template-rows: repeat(9, 40px); /* 9 صفوف */
-    grid-template-columns: repeat(9, 40px); /* 9 أعمدة */
-    margin: 20px auto;
+    grid-template-rows: repeat(9, 40px);
+    grid-template-columns: repeat(9, 40px);
+    margin-top: 10px;
   }
   
   .cell {
@@ -10,48 +42,50 @@
     height: 40px;
     text-align: center;
     font-size: 18px;
-    border: 1px solid lightgray; /* الحدود الافتراضية للخلايا */
+    border: 1px solid lightgray;
     box-sizing: border-box;
+    cursor: pointer; /* تغيير المؤشر عند التفاعل مع الخلايا */
   }
   
-  /* خطوط سوداء داكنة لتقسيم مربعات 3x3 */
-  .cell:nth-child(3n) {
-    border-right: 2px solid black;
+  .cell:focus {
+    outline: none; /* إزالة التأثير عند التركيز على الخلية */
   }
   
-  .cell:nth-child(-n+9) {
-    border-top: 2px solid black;
+  /* تنسيق الخلية المحددة */
+  .selected {
+    border: 2px solid blue;
+    background-color: #e0f7fa;
   }
   
-  .cell:nth-child(n+73) {
-    border-bottom: 2px solid black;
-  }
-  
-  .cell:nth-child(9n+1),
-  .cell:nth-child(9n+4),
-  .cell:nth-child(9n+7) {
-    border-left: 2px solid black;
-  }
-  
-  /* إضافة خط أسود داكن أسفل الصفوف 3 و 6 و 9 */
-  .cell:nth-child(n+19):nth-child(-n+27) {
-    border-bottom: 2px solid black;
-  }
-  
-  .cell:nth-child(n+46):nth-child(-n+54) {
-    border-bottom: 1px solid black;
-  }
-  
-  .cell:nth-child(n+73):nth-child(-n+81) {
-    border-bottom: 2px solid black;
-  }
-  
-  .App {
-    text-align: center;
-  }
-  
-  h1 {
-    font-size: 24px;
-    margin: 20px 0;
-  }
-  
+    /* خطوط سوداء داكنة لتقسيم مربعات 3x3 */
+    .cell:nth-child(3n) {
+        border-right: 2px solid black;
+      }
+      
+      .cell:nth-child(-n+9) {
+        border-top: 2px solid black;
+      }
+      
+      .cell:nth-child(n+73) {
+        border-bottom: 2px solid black;
+      }
+      
+      .cell:nth-child(9n+1),
+      .cell:nth-child(9n+4),
+      .cell:nth-child(9n+7) {
+        border-left: 2px solid black;
+      }
+      
+      /* إضافة خط أسود داكن أسفل الصفوف 3 و 6 و 9 */
+      .cell:nth-child(n+19):nth-child(-n+27) {
+        border-bottom: 2px solid black;
+      }
+      
+      .cell:nth-child(n+46):nth-child(-n+54) {
+        border-bottom: 1px solid black;
+      }
+      
+      .cell:nth-child(n+73):nth-child(-n+81) {
+        border-bottom: 2px solid black;
+      }
+     
