@@ -1,57 +1,72 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './Board.css';
+import Cell from './Cell';
+import { isValidSudoku } from './utils';
 
-const Board = () => {
+const Board: React.FC = () => {
   const initialBoard = Array.from({ length: 9 }, () => Array(9).fill(''));
-  const [board, setBoard] = useState(initialBoard);
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null); 
-
+  const [board, setBoard] = useState<string[][]>(initialBoard);
+  const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
 
   const handleCellClick = (row: number, col: number) => {
-    setSelectedCell({ row, col }); 
+    setSelectedCell([row, col]);
   };
-
 
   const handleNumberClick = (number: string) => {
     if (selectedCell) {
-      const { row, col } = selectedCell;
-      const newBoard = [...board];
-      newBoard[row][col] = number; 
-      setBoard(newBoard);
+      const [row, col] = selectedCell;
+      const updatedBoard = [...board];
+      updatedBoard[row][col] = number;
+      setBoard(updatedBoard);
+      setSelectedCell(null); // إلغاء تحديد الخلية بعد الكتابة
+    }
+  };
+
+  const handleSubmit = () => {
+    if (isValidSudoku(board)) {
+      alert('Congratulations! You solved it!');
+    } else {
+      alert('Incorrect solution. Try again!');
     }
   };
 
   return (
     <div className="board-container">
-
+      {/* أرقام الإدخال */}
       <div className="number-row">
-        {Array.from({ length: 9 }, (_, i) => (
+        {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((number) => (
           <div
-            key={i}
+            key={number}
             className="number"
-            onClick={() => handleNumberClick((i + 1).toString())} 
+            onClick={() => handleNumberClick(number)}
           >
-            {i + 1}
+            {number}
           </div>
         ))}
       </div>
 
-
-    <div className="board">
+      {/* اللوحة */}
+      <div className="board">
         {board.map((row, rowIndex) =>
           row.map((cellValue, colIndex) => (
-            <input
+            <Cell
               key={`${rowIndex}-${colIndex}`}
-              className={`cell ${selectedCell?.row === rowIndex && selectedCell?.col === colIndex ? 'selected' : ''}`} 
-              type="text"
-              maxLength={1}
               value={cellValue}
-              onClick={() => handleCellClick(rowIndex, colIndex)} 
-              readOnly 
+              isSelected={
+                selectedCell
+                  ? selectedCell[0] === rowIndex && selectedCell[1] === colIndex
+                  : false
+              }
+              onClick={() => handleCellClick(rowIndex, colIndex)}
             />
           ))
         )}
       </div>
+
+      {/* زر التحقق */}
+      <button className="submit-button" onClick={handleSubmit}>
+        Check Solution
+      </button>
     </div>
   );
 };
