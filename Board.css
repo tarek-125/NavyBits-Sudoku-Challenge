@@ -89,7 +89,33 @@
     background-color: #e64a19;
   }
 
+  .board-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
   
+  .difficulty-selector {
+    margin-bottom: 20px;
+  }
+  
+  .number-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+
+
+
+
+  
+  .difficulty-dropdown {
+    font-size: 16px;
+    padding: 8px;
+    cursor: pointer;
+  }
 
   
     /* خطوط سوداء داكنة لتقسيم مربعات 3x3 */

@@ -1,16 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import './Board.css';
 import Cell from './Cell';
-import { isValidSudoku, N, SudokuGrid, isSafe, checkConflicts } from './utils';
+import { N, isSafe, checkConflicts } from './utils';
 
 const Board: React.FC = () => {
   const [board, setBoard] = useState<string[][]>([]);
   const [conflicts, setConflicts] = useState<number[]>([]); // حالة لتتبع الخلايا المتضاربة
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
+  const [difficulty, setDifficulty] = useState<string>('Medium'); // حالة لتخزين مستوى الصعوبة
 
-  const initializeBoard = () => {
+  const initializeBoard = (level: string) => {
     const emptyBoard = Array.from({ length: N }, () => Array(N).fill(0));
-    const numPrefilledCells = 10;
+    let numPrefilledCells: number;
+
+    switch (level) {
+      case 'Easy':
+        numPrefilledCells = 20;
+        break;
+      case 'Medium':
+        numPrefilledCells = 15;
+        break;
+      case 'Hard':
+        numPrefilledCells = 10;
+        break;
+      default:
+        numPrefilledCells = 18;
+    }
 
     let count = 0;
     while (count < numPrefilledCells) {
@@ -33,8 +48,8 @@ const Board: React.FC = () => {
   };
 
   useEffect(() => {
-    initializeBoard();
-  }, []);
+    initializeBoard(difficulty);
+  }, [difficulty]); // إعادة تهيئة اللوحة عندما يتغير مستوى الصعوبة
 
   const updateConflicts = (updatedBoard: string[][]) => {
     const numericBoard = updatedBoard.map((row) =>
@@ -61,8 +76,12 @@ const Board: React.FC = () => {
   };
 
   const handleRestart = () => {
-    initializeBoard();
+    initializeBoard(difficulty);
     setSelectedCell(null);
+  };
+
+  const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setDifficulty(event.target.value); // تحديث مستوى الصعوبة عند تغيير الاختيار
   };
 
   return (
@@ -103,9 +122,20 @@ const Board: React.FC = () => {
       </div>
 
       <div className="actions">
-        <button className="restart-button" onClick={handleRestart}>
-          Restart Game
-        </button>
+        <div className="restart-container">
+          <button className="restart-button" onClick={handleRestart}>
+            Restart Game
+          </button>
+          <select
+            className="difficulty-dropdown"
+            value={difficulty}
+            onChange={handleDifficultyChange}
+          >
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </div>
       </div>
     </div>
   );
