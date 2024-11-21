@@ -111,3 +111,39 @@ export const checkConflicts = (board: number[][]): number[] => {
     return Array.from(conflicts);
   };
   
+  export function solveSudoku(grid: SudokuGrid): number {
+    let solutionCount = 0;
+  
+    function solve(row: number, col: number): boolean {
+      if (row === N) {
+        solutionCount++;
+        return solutionCount === 1; // توقف إذا تم العثور على حل واحد فقط
+      }
+  
+      if (col === N) {
+        return solve(row + 1, 0);
+      }
+  
+      if (grid[row][col] !== 0) {
+        return solve(row, col + 1);
+      }
+  
+      for (let num = 1; num <= 9; num++) {
+        if (isSafe(grid, row, col, num)) {
+          grid[row][col] = num;
+  
+          if (solve(row, col + 1)) {
+            return true;
+          }
+  
+          grid[row][col] = 0; // تراجع
+        }
+      }
+  
+      return false;
+    }
+  
+    solve(0, 0);
+    return solutionCount; // يعيد عدد الحلول
+  }
+  
