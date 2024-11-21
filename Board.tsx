@@ -1,56 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import './Board.css';
 import Cell from './Cell';
-import { isValidSudoku } from './utils';
-
-const generateRandomBoard = () => {
-    const newBoard = Array.from({ length: 9 }, () => Array(9).fill(''));
-    const filledCells = 20; // عدد الخلايا التي سيتم ملؤها عشوائيًا
-  
-    const isSafeToPlace = (board: string[][], row: number, col: number, num: string): boolean => {
-      // تحقق من الصف
-      if (board[row].includes(num)) return false;
-  
-      // تحقق من العمود
-      for (let i = 0; i < 9; i++) {
-        if (board[i][col] === num) return false;
-      }
-  
-      // تحقق من المربع الفرعي 3×3
-      const startRow = Math.floor(row / 3) * 3;
-      const startCol = Math.floor(col / 3) * 3;
-      for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-          if (board[startRow + i][startCol + j] === num) return false;
-        }
-      }
-  
-      return true;
-    };
-  
-    let count = 0;
-    while (count < filledCells) {
-      const randomRow = Math.floor(Math.random() * 9);
-      const randomCol = Math.floor(Math.random() * 9);
-      const randomNumber = String(Math.floor(Math.random() * 9) + 1);
-  
-      // إذا كانت الخلية فارغة والرقم صالح، قم بتعبئتها
-      if (newBoard[randomRow][randomCol] === '' && isSafeToPlace(newBoard, randomRow, randomCol, randomNumber)) {
-        newBoard[randomRow][randomCol] = randomNumber;
-        count++;
-      }
-    }
-  
-    return newBoard;
-  };
+import { isValidSudoku, N, SudokuGrid, isSafe, checkConflicts } from './utils';
 
 const Board: React.FC = () => {
   const [board, setBoard] = useState<string[][]>([]);
+  const [conflicts, setConflicts] = useState<number[]>([]); // حالة لتتبع الخلايا المتضاربة
   const [selectedCell, setSelectedCell] = useState<[number, number] | null>(null);
 
+  const initializeBoard = () => {
+    const emptyBoard = Array.from({ length: N }, () => Array(N).fill(0));
+    const numPrefilledCells = 10;
+
+    let count = 0;
+    while (count < numPrefilledCells) {
+      const row = Math.floor(Math.random() * N);
+      const col = Math.floor(Math.random() * N);
+      const num = Math.floor(Math.random() * 9) + 1;
+
+      if (emptyBoard[row][col] === 0 && isSafe(emptyBoard, row, col, num)) {
+        emptyBoard[row][col] = num;
+        count++;
+      }
+    }
+
+    const textBoard = emptyBoard.map((row) =>
+      row.map((cell) => (cell === 0 ? '' : cell.toString()))
+    );
+
+    setBoard(textBoard);
+    setConflicts([]); // إعادة تعيين التعارضات
+  };
+
   useEffect(() => {
-    setBoard(generateRandomBoard());
+    initializeBoard();
   }, []);
+
+  const updateConflicts = (updatedBoard: string[][]) => {
+    const numericBoard = updatedBoard.map((row) =>
+      row.map((cell) => (cell === '' ? 0 : parseInt(cell)))
+    );
+    const conflictIndices = checkConflicts(numericBoard);
+    setConflicts(conflictIndices);
+  };
 
   const handleCellClick = (row: number, col: number) => {
     setSelectedCell([row, col]);
@@ -60,32 +52,21 @@ const Board: React.FC = () => {
     if (selectedCell) {
       const [row, col] = selectedCell;
 
-      // لا تقم بتغيير القيم العشوائية المحددة مسبقًا
-      if (board[row][col] !== '') return;
-
       const updatedBoard = [...board];
-      updatedBoard[row][col] = number;
-      setBoard(updatedBoard);
-      setSelectedCell(null); // قم بإلغاء التحديد بعد إدخال الرقم
-    }
-  };
-
-  const handleSubmit = () => {
-    if (isValidSudoku(board)) {
-      alert('Congratulations! You solved the Sudoku!');
-    } else {
-      alert('Invalid solution. Please try again.');
+      updatedBoard[row][col] = number; // إدخال الرقم في الخلية
+      setBoard(updatedBoard); // تحديث اللوحة
+      updateConflicts(updatedBoard); // تحديث التعارضات
+      setSelectedCell(null); // إلغاء تحديد الخلية
     }
   };
 
   const handleRestart = () => {
-    setBoard(generateRandomBoard());
+    initializeBoard();
     setSelectedCell(null);
   };
 
   return (
     <div className="board-container">
-      {/* أرقام الإدخال */}
       <div className="number-row">
         {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((number) => (
           <div
@@ -98,29 +79,30 @@ const Board: React.FC = () => {
         ))}
       </div>
 
-      {/* اللوحة */}
       <div className="board">
         {board.map((row, rowIndex) =>
-          row.map((cellValue, colIndex) => (
-            <Cell
-              key={`${rowIndex}-${colIndex}`}
-              value={cellValue}
-              isSelected={
-                selectedCell
-                  ? selectedCell[0] === rowIndex && selectedCell[1] === colIndex
-                  : false
-              }
-              onClick={() => handleCellClick(rowIndex, colIndex)}
-            />
-          ))
+          row.map((cellValue, colIndex) => {
+            const cellIndex = rowIndex * N + colIndex; // حساب الفهرس 1D
+            const isConflict = conflicts.includes(cellIndex); // التحقق من التعارض
+
+            return (
+              <Cell
+                key={`${rowIndex}-${colIndex}`}
+                value={cellValue}
+                isSelected={
+                  selectedCell
+                    ? selectedCell[0] === rowIndex && selectedCell[1] === colIndex
+                    : false
+                }
+                onClick={() => handleCellClick(rowIndex, colIndex)}
+                highlight={isConflict ? '#f8d7da' : undefined} // لون تعارض
+              />
+            );
+          })
         )}
       </div>
 
-      {/* الأزرار */}
       <div className="actions">
-        <button className="submit-button" onClick={handleSubmit}>
-          Check Solution
-        </button>
         <button className="restart-button" onClick={handleRestart}>
           Restart Game
         </button>

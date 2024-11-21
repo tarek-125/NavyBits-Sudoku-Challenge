@@ -49,10 +49,12 @@
     justify-content: center;
     box-sizing: border-box;
     cursor: pointer;
+    user-select: none;
+    
   }
   
   .cell.selected {
-    background-color: #d3f8d3;
+    background-color: #d3f6f8;
   }
   
   .actions {
@@ -86,35 +88,38 @@
   .restart-button:hover {
     background-color: #e64a19;
   }
+
+  
+
   
     /* خطوط سوداء داكنة لتقسيم مربعات 3x3 */
     .cell:nth-child(3n) {
         border-right: 2px solid black;
-      }
-      
-      .cell:nth-child(-n+9) {
+    }
+    
+    .cell:nth-child(-n+9) {
         border-top: 2px solid black;
-      }
-      
-      .cell:nth-child(n+73) {
+    }
+    
+    .cell:nth-child(n+73) {
         border-bottom: 2px solid black;
-      }
-      
-      .cell:nth-child(9n+1),
-      .cell:nth-child(9n+4),
-      .cell:nth-child(9n+7) {
+    }
+    
+    .cell:nth-child(9n+1),
+    .cell:nth-child(9n+4),
+    .cell:nth-child(9n+7) {
         border-left: 2px solid black;
-      }
-      
+    }
+    
       /* إضافة خط أسود داكن أسفل الصفوف 3 و 6 و 9 */
-      .cell:nth-child(n+19):nth-child(-n+27) {
+    .cell:nth-child(n+19):nth-child(-n+27) {
         border-bottom: 2px solid black;
-      }
-      
-      .cell:nth-child(n+46):nth-child(-n+54) {
+    }
+    
+    .cell:nth-child(n+46):nth-child(-n+54) {
         border-bottom: 1px solid black;
-      }
-      
-      .cell:nth-child(n+73):nth-child(-n+81) {
+    }
+    
+    .cell:nth-child(n+73):nth-child(-n+81) {
         border-bottom: 2px solid black;
-      }
+    }
